@@ -336,6 +336,10 @@ struct Bot {
 		}
 	}
 
+	void guessWord(const string &word) {
+		getWordScore(word, true);
+	}
+
 	pair<string, int> getBestWord(const vector<string> &_myWords,
 								  const vector<string> &_opponentWords,
 								  const vector<string> &_greyWords,
@@ -413,6 +417,8 @@ class GameInterface {
 		cout << "go\t\t-\tReceive clues" << endl;
 		cout << "reset\t\t-\tClear the board" << endl;
 		cout << "board\t\t-\tPrints the words currently on the board" << endl;
+		cout << "guess <word>\t-\tPrint calculated estimates for a clue" << endl;
+		cout << "quit\t\t-\tTerminates the program" << endl;
 	}
 
 	void commandBoard() {
@@ -438,7 +444,17 @@ class GameInterface {
 		cout << endl;
 	}
 
-	void commandModifyBoard(string command) {
+	void commandGuess() {
+		string word;
+		cin >> word;
+		if (engine.wordExists(word)) {
+			bot.guessWord(word);
+		} else {
+			cout << word << " was not found in the dictionary" << endl;
+		}
+	}
+
+	void commandModifyBoard(const string &command) {
 		vector<string> *v = NULL;
 		if (command == myColor) {
 			v = &myWords;
@@ -526,6 +542,12 @@ class GameInterface {
 			}
 			else if (command == "board") {
 				commandBoard();
+			}
+			else if (command == "guess") {
+				commandGuess();
+			}
+			else {
+				cout << "Unknown command \"" << command << "\"" << endl;
 			}
 		}
 	}
